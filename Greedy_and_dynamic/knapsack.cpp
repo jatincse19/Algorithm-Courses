@@ -1,31 +1,39 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int knapSack(int W, int wt[], int val[], int n)
+int dp[10001][101];
+
+int knapSack(int bud, int weight[], int value[], int n)
 {
-   int i, w;
-   int K[n+1][W+1];
+   int i, j;
 
    for (i = 0; i <= n; i++)
    {
-       for (w = 0; w <= W; w++)
+       for (j = 0; j <= bud; j++)
        {
-           if (i==0 || w==0)
-               K[i][w] = 0;
-           else if (wt[i-1] <= w)
-                 K[i][w] = max(val[i-1] + K[i-1][w-wt[i-1]],  K[i-1][w]);
+           if (i==0 || j==0)
+               dp[i][j] = 0;
+           else if (weight[i-1] <= j)
+               dp[i][j] = max(value[i-1] + dp[i-1][j-weight[i-1]],  dp[i-1][j]);
            else
-                 K[i][w] = K[i-1][w];
+               dp[i][j] = dp[i-1][j];
        }
    }
 
-   return K[n][W];
+   return dp[n][bud];
 }
+
 int main() {
-    int value[10001],weight[10001];
     int bud,n;
-    cin>>bud>>n;
-    for(int j=0;j<n;j++) cin>>value[j]>>weight[j];
+    ifstream infile;
+    infile.open("knapsack1.txt",ios::in);
+    infile>>bud>>n;
+    int value[n+1],weight[n+1];
+    cout<<bud<<" "<<n<<endl;
+    for(int j=0;j<n;j++) infile>>value[j]>>weight[j];
+    for(int j=0;j<n;j++) cout<<value[j]<<" "<<weight[j]<<endl;
+    infile.close();
+    //cout<<"hello"<<endl;
     int ans = knapSack(bud,weight,value,n);
     cout<<ans<<endl;
 
